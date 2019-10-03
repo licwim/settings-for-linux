@@ -20,6 +20,7 @@ install_pkg()
 {
 	echo
 	echo "$GREEN	INSTALLING $@ $RESET"
+	echo
 	sudo apt install $@ -y
 }
 
@@ -29,7 +30,7 @@ check_sudo()
 	then
 		sudo -l | grep "Matching Defaults" > /dev/null ||
 		{
-			echo "Please, add the user to sudoers."
+			printf "Please, add the user to sudoers.\nYou can use 'visudo' on the root-user."
 			exit
 		}
 	else
