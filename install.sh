@@ -71,15 +71,17 @@ done
 git config --global user.name "licwim"
 git config --global user.email licwimm@gmail.com
 
-git clone "$GITPATH" $DIR
+if ls -la $HOME | grep "settings-for-linux" > /dev/null || git clone "$GITPATH" $DIR
+
+TIME=$(echo "$(date +%d%m%y)_$(date +%H%M%S)")
 
 if ls -la $HOME | grep .vimrc > /dev/null
 then
-	cp $HOME/.vimrc $DIR/backup/vimrc__original
+	cp $HOME/.vimrc $DIR/backup/vimrc_original_$TIME
 fi
 cp $DIR/source/.vimrc $HOME/.vimrc
 
-sudo cp $SSH/sshd_config $DIR/backup/sshd_config__original
+sudo cp $SSH/sshd_config $DIR/backup/sshd_config_original_$TIME
 sudo cp $DIR/source/sshd_config $SSH/sshd_config
 sudo service sshd restart
 
