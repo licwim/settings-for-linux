@@ -17,7 +17,7 @@ RESET=$(printf '\033[m')
 
 install_pkg()
 {
-	echo "$GREEN	INSTALLING $@ $RESET"
+	printf "\n$GREEN	INSTALLING $@ $RESET"
 	sudo apt install $@ -y
 }
 
@@ -39,18 +39,16 @@ check_sudo()
 check_pkg()
 {
 	dpkg --get-selections | grep -v "deinstall" | grep $@ > /dev/null || install_pkg $@
-	echo "$RED $@ INSTALLED $RESET"
-	echo "----------------------------------------------------------------"
-	echo
+	printf "$RED $@ INSTALLED $RESET\n\n"
+	printf "----------------------------------------------------------------"
 }
 
 
 check_cmd()
 {
 	command -v $@ > /dev/null || install_pkg $@
-	echo "$RED $@ INSTALLED $RESET"
-	echo "----------------------------------------------------------------"
-	echo
+	printf "$RED $@ INSTALLED $RESET\n\n"
+	printf "----------------------------------------------------------------"
 }
 
 check_sudo
@@ -89,5 +87,5 @@ sudo service sshd restart
 
 OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 
-#sudo apt-get install zsh -y
-#sh -c "$(wget -O- $OHMYZSH)"
+sudo apt-get install zsh -y
+sh -c "$(wget -O- $OHMYZSH)"
