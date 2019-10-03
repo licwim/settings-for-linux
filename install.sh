@@ -1,44 +1,65 @@
 #!/bin/bash
-PKGS="sudo openssh-server net-tools gcc vim git"
+PKGS="openssh-server net-tools"
+CMDS="gcc vim git"
 DIR="$HOME/settings-for-linux"
 GITPATH="https://github.com/licwim/settings-for-linux.git"
 SSH="/etc/ssh"
-OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
+
+
+#	Colors
+
+RED=$(printf '\033[31m')
+GREEN=$(printf '\033[32m')
+YELLOW=$(printf '\033[33m')
+BLUE=$(printf '\033[34m')
+BOLD=$(printf '\033[1m')
+RESET=$(printf '\033[m')
 
 install_pkg()
 {
-	sudo apt-get install "$@" -y
+	echo "$GREEN	INSTALL $@ $RESET"
+	sudo apt install $@ -y
 }
 
 check_sudo()
 {
-	sudo -l | grep "Matching Defaults" > /dev/null || {
-	echo "Please, add the user to sudoers."
-	exit
+	if command -v $@ > /dev/null
+	then
+		sudo -l | grep "Matching Defaults" > /dev/null ||
+		{
+			echo "Please, add the user to sudoers."
+			exit
+		}
+	else
+		echo "Please, install 'sudo'."
+		exit
 	}
-	sudo apt-get update
 }
 
 check_pkg()
 {
-	dpkg --get-selections | grep -v "deinstall" | grep "$@" > /dev/null || {
-		if [ $@ = "sudo" ]
-		then
-		echo "Please, install 'sudo'."
-		exit
-		else
-		install_pkg "$@"
-		fi
-	}
-	if [ $@ = "sudo" ]
-	then
-		check_sudo
-	fi
+	dpkg --get-selections | grep -v "deinstall" | grep $@ > /dev/null || install_pkg $@
 }
+
+
+check_cmd()
+{
+	command -v $@ > /dev/null || install_pkg $@
+}
+
+check_sudo
+sudo apt update
 
 for pkg in $PKGS
 do
+echo "$YELLOW	CHECKING $pkg $RESET"
 check_pkg $pkg
+done
+
+for cmd in $CMDS
+do
+echo "$YELLOW	CHECKING $cmd $RESET"
+check_cmd $cmd
 done
 
 git config --global user.name "licwim"
@@ -51,6 +72,10 @@ cp $DIR/source/.vimrc $HOME/.vimrc
 
 sudo cp $SSH/sshd_config $DIR/backup/sshd_config__original
 sudo cp $DIR/source/sshd_config $SSH/sshd_config
+
+#	Optional packages
+
+OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 
 #sudo apt-get install zsh -y
 #sh -c "$(wget -O- $OHMYZSH)"
