@@ -17,7 +17,7 @@ RESET=$(printf '\033[m')
 
 install_pkg()
 {
-	echo "$GREEN	INSTALL $@ $RESET"
+	echo "$GREEN	INSTALLING $@ $RESET"
 	sudo apt install $@ -y
 }
 
@@ -39,12 +39,18 @@ check_sudo()
 check_pkg()
 {
 	dpkg --get-selections | grep -v "deinstall" | grep $@ > /dev/null || install_pkg $@
+	echo "$RED $@ INSTALLED $RESET"
+	echo "----------------------------------------------------------------"
+	echo
 }
 
 
 check_cmd()
 {
 	command -v $@ > /dev/null || install_pkg $@
+	echo "$RED $@ INSTALLED $RESET"
+	echo "----------------------------------------------------------------"
+	echo
 }
 
 check_sudo
@@ -52,13 +58,15 @@ sudo apt update
 
 for pkg in $PKGS
 do
-echo "$YELLOW	CHECKING $pkg $RESET"
+echo "----------------------------------------------------------------"
+echo "$YELLOW CHECKING $pkg $RESET"
 check_pkg $pkg
 done
 
 for cmd in $CMDS
 do
-echo "$YELLOW	CHECKING $cmd $RESET"
+echo "----------------------------------------------------------------"
+echo "$YELLOW CHECKING $cmd $RESET"
 check_cmd $cmd
 done
 
@@ -67,8 +75,11 @@ git config --global user.email licwimm@gmail.com
 
 git clone "$GITPATH" $DIR
 
-cp $HOME/.vimrc $DIR/backup/vimrc__original
-cp $DIR/source/.vimrc $HOME/.vimrc 
+if ls -la $HOME | grep .vimrc > /dev/null
+then
+	cp $HOME/.vimrc $DIR/backup/vimrc__original
+fi
+cp $DIR/source/.vimrc $HOME/.vimrc
 
 sudo cp $SSH/sshd_config $DIR/backup/sshd_config__original
 sudo cp $DIR/source/sshd_config $SSH/sshd_config
