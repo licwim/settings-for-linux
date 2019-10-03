@@ -1,9 +1,10 @@
 #!/bin/bash
 PKGS="openssh-server net-tools"
-CMDS="gcc vim git"
+CMDS="gcc vim git zsh"
 DIR="$HOME/settings-for-linux"
 GITPATH="https://github.com/licwim/settings-for-linux.git"
 SSH="/etc/ssh"
+TIME=$(echo "$(date +%d%m%y)_$(date +%H%M%S)")
 
 
 #	Colors
@@ -17,7 +18,8 @@ RESET=$(printf '\033[m')
 
 install_pkg()
 {
-	printf "\n$GREEN	INSTALLING $@ $RESET"
+	echo
+	echo "$GREEN	INSTALLING $@ $RESET"
 	sudo apt install $@ -y
 }
 
@@ -39,16 +41,18 @@ check_sudo()
 check_pkg()
 {
 	dpkg --get-selections | grep -v "deinstall" | grep $@ > /dev/null || install_pkg $@
-	printf "$RED $@ INSTALLED $RESET\n\n"
+	echo "$RED $@ INSTALLED $RESET"
 	echo "----------------------------------------------------------------"
+	echo
 }
 
 
 check_cmd()
 {
 	command -v $@ > /dev/null || install_pkg $@
-	printf "$RED $@ INSTALLED $RESET\n\n"
+	echo "$RED $@ INSTALLED $RESET"
 	echo "----------------------------------------------------------------"
+	echo
 }
 
 check_sudo
@@ -71,11 +75,12 @@ done
 git config --global user.name "licwim"
 git config --global user.email licwimm@gmail.com
 
-ls -la $HOME | grep "settings-for-linux" > /dev/null || git clone "$GITPATH" $DIR
+if [ ! -e "$HOME/settings-for-linux" ]
+then
+	git clone "$GITPATH" $DIR
+fi
 
-TIME=$(echo "$(date +%d%m%y)_$(date +%H%M%S)")
-
-if ls -la $HOME | grep .vimrc > /dev/null
+if [ -e "$HOME/.vimrc" ]
 then
 	cp $HOME/.vimrc $DIR/backup/vimrc_original_$TIME
 fi
@@ -89,5 +94,4 @@ sudo service sshd restart
 
 OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 
-sudo apt-get install zsh -y
-sh -c "$(wget -O- $OHMYZSH)"
+sh -c "$(wget -O- $OHMYZSH)" -y
