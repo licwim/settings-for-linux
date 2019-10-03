@@ -71,7 +71,7 @@ done
 git config --global user.name "licwim"
 git config --global user.email licwimm@gmail.com
 
-if ls -la $HOME | grep "settings-for-linux" > /dev/null || git clone "$GITPATH" $DIR
+ls -la $HOME | grep "settings-for-linux" > /dev/null || git clone "$GITPATH" $DIR
 
 TIME=$(echo "$(date +%d%m%y)_$(date +%H%M%S)")
 
