@@ -40,7 +40,7 @@ check_pkg()
 {
 	dpkg --get-selections | grep -v "deinstall" | grep $@ > /dev/null || install_pkg $@
 	printf "$RED $@ INSTALLED $RESET\n\n"
-	printf "----------------------------------------------------------------"
+	echo "----------------------------------------------------------------"
 }
 
 
@@ -48,7 +48,7 @@ check_cmd()
 {
 	command -v $@ > /dev/null || install_pkg $@
 	printf "$RED $@ INSTALLED $RESET\n\n"
-	printf "----------------------------------------------------------------"
+	echo "----------------------------------------------------------------"
 }
 
 check_sudo
