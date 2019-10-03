@@ -83,6 +83,7 @@ cp $DIR/source/.vimrc $HOME/.vimrc
 
 sudo cp $SSH/sshd_config $DIR/backup/sshd_config__original
 sudo cp $DIR/source/sshd_config $SSH/sshd_config
+sudo service sshd restart
 
 #	Optional packages
 
