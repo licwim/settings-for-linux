@@ -94,4 +94,4 @@ sudo service sshd restart
 
 OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 
-sh -c "$(wget -O- $OHMYZSH)" -y
+#sh -c "$(wget -O- $OHMYZSH)"
