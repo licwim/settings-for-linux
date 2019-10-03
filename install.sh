@@ -23,7 +23,7 @@ install_pkg()
 
 check_sudo()
 {
-	if command -v $@ > /dev/null
+	if command -v sudo > /dev/null
 	then
 		sudo -l | grep "Matching Defaults" > /dev/null ||
 		{
@@ -33,7 +33,7 @@ check_sudo()
 	else
 		echo "Please, install 'sudo'."
 		exit
-	}
+	fi
 }
 
 check_pkg()
